@@ -154,6 +154,7 @@ fun TextFieldLogin(
         label = { Text(text = label) },
         maxLines = 1,
         singleLine = true,
+        shape = RoundedCornerShape(15.dp),
         visualTransformation = visualTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         colors = TextFieldColorsLogin()
