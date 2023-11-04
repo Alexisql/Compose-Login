@@ -9,5 +9,6 @@
     <string name="labelTextFieldPassword">Password</string>
     <string name="textButtonLogIn">Log In</string>
     <string name="textForgotPassword">Forgot password?</string>
+    <string name="contentDescriptionIconPassword">Show password</string>
 
 </resources>

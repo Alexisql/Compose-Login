@@ -10,10 +10,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -101,7 +106,8 @@ fun TextFieldPassword(
         keyboardType = KeyboardType.Password,
         visualTransformation = if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
         onTextChanged = onTextChanged,
-        onBorderColorChanged = onBorderColorChanged
+        onBorderColorChanged = onBorderColorChanged,
+        trailingIcon = { IconPassword(passwordHidden) { passwordHidden = it } }
     )
 }
 
@@ -137,6 +143,7 @@ fun TextFieldLogin(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextChanged: (String) -> Unit,
     onBorderColorChanged: (Long) -> Unit,
+    trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     TextField(
         value = text,
@@ -157,8 +164,25 @@ fun TextFieldLogin(
         shape = RoundedCornerShape(15.dp),
         visualTransformation = visualTransformation,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        trailingIcon = trailingIcon,
         colors = TextFieldColorsLogin()
     )
+}
+
+@Composable
+fun IconPassword(passwordHidden: Boolean, onVisibilityChanged: (Boolean) -> Unit) {
+    val iconVisibility = if (passwordHidden) {
+        Icons.Outlined.VisibilityOff
+    } else {
+        Icons.Outlined.Visibility
+    }
+    IconButton(onClick = { onVisibilityChanged(!passwordHidden) }) {
+        Icon(
+            imageVector = iconVisibility,
+            contentDescription = stringResource(id = R.string.contentDescriptionIconPassword),
+            tint = Color.DarkGray
+        )
+    }
 }
 
 @Composable
