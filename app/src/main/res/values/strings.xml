@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">ComposeLogin</string>
+    <string name="contentDescriptionCloseApp">Close App</string>
+    <string name="createNewAccount">Create new account</string>
+    <string name="contentDescriptionLogoMeta">Logo Meta</string>
+    <string name="contentDescriptionLogoInstagram">Logo Instagram</string>
+    <string name="footerMeta">Meta</string>
+    <string name="labelTextFieldEmail">Username, email or mobile number</string>
+    <string name="labelTextFieldPassword">Password</string>
+    <string name="textButtonLogIn">Log In</string>
+    <string name="textForgotPassword">Forgot password?</string>
+
 </resources>
