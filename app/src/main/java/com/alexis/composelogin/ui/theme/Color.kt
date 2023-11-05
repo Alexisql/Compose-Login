@@ -2,10 +2,12 @@ package com.alexis.composelogin.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val Blue = Color(0xFF0464e4)
+val Blue50 = Color(0x800464E4)
+val BlueGrey = Color(0xFF9ECDF0)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val BlueDark = Color(0x660524E9)
+val BlueDark40 = Color(0x660464E4)
+val BlueGreyDark40 = Color(0x66426DA7)
+
+
