@@ -10,5 +10,6 @@
     <string name="textButtonLogIn">Log In</string>
     <string name="textForgotPassword">Forgot password?</string>
     <string name="contentDescriptionIconPassword">Show password</string>
+    <string name="contentDescriptionIconEmail">Clear email</string>
 
 </resources>

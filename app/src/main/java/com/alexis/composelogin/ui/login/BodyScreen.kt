@@ -17,6 +17,7 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldColors
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.alexis.composelogin.R
 
@@ -81,13 +83,20 @@ fun TextFieldEmail(
     onTextChanged: (String) -> Unit,
     onBorderColorChanged: (Long) -> Unit
 ) {
+    var visibilityIcon by rememberSaveable { mutableStateOf(false) }
     TextFieldLogin(
         text = email,
         borderColor = borderColor,
         label = stringResource(id = R.string.labelTextFieldEmail),
         keyboardType = KeyboardType.Email,
         onTextChanged = onTextChanged,
-        onBorderColorChanged = onBorderColorChanged
+        onBorderColorChanged = onBorderColorChanged,
+        trailingIcon = {
+            if (visibilityIcon && email.isNotEmpty()) {
+                IconDeleteEmail { onTextChanged(it) }
+            }
+        },
+        onVisibilityIconChanged = { visibilityIcon = it }
     )
 }
 
@@ -99,6 +108,8 @@ fun TextFieldPassword(
     onBorderColorChanged: (Long) -> Unit
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
+    var visibilityIcon by rememberSaveable { mutableStateOf(false) }
+
     TextFieldLogin(
         text = password,
         label = stringResource(id = R.string.labelTextFieldPassword),
@@ -107,7 +118,12 @@ fun TextFieldPassword(
         visualTransformation = if (passwordHidden) PasswordVisualTransformation() else VisualTransformation.None,
         onTextChanged = onTextChanged,
         onBorderColorChanged = onBorderColorChanged,
-        trailingIcon = { IconPassword(passwordHidden) { passwordHidden = it } }
+        trailingIcon = {
+            if (visibilityIcon || password.isNotEmpty()) {
+                IconPassword(passwordHidden) { passwordHidden = it }
+            }
+        },
+        onVisibilityIconChanged = { visibilityIcon = it }
     )
 }
 
@@ -144,6 +160,7 @@ fun TextFieldLogin(
     onTextChanged: (String) -> Unit,
     onBorderColorChanged: (Long) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
+    onVisibilityIconChanged: (Boolean) -> Unit
 ) {
     TextField(
         value = text,
@@ -151,14 +168,22 @@ fun TextFieldLogin(
         modifier = Modifier
             .fillMaxWidth()
             .onFocusChanged {
-                if (it.isFocused) {
+                val isFocused = it.isFocused
+                onVisibilityIconChanged(isFocused)
+                if (isFocused) {
                     onBorderColorChanged(0xFF444444)
                 } else {
                     onBorderColorChanged(0xFFCCCCCC)
                 }
             }
             .border(1.dp, Color(borderColor), RoundedCornerShape(15.dp)),
-        label = { Text(text = label) },
+        label = {
+            Text(
+                text = label,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        },
         maxLines = 1,
         singleLine = true,
         shape = RoundedCornerShape(15.dp),
@@ -180,6 +205,17 @@ fun IconPassword(passwordHidden: Boolean, onVisibilityChanged: (Boolean) -> Unit
         Icon(
             imageVector = iconVisibility,
             contentDescription = stringResource(id = R.string.contentDescriptionIconPassword),
+            tint = Color.DarkGray
+        )
+    }
+}
+
+@Composable
+fun IconDeleteEmail(onDeleteEmail: (String) -> Unit) {
+    IconButton(onClick = { onDeleteEmail("") }) {
+        Icon(
+            imageVector = Icons.Outlined.Clear,
+            contentDescription = stringResource(id = R.string.contentDescriptionIconEmail),
             tint = Color.DarkGray
         )
     }
