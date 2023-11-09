@@ -1,4 +1,4 @@
-package com.alexis.composelogin.ui.login
+package com.alexis.composelogin.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -22,6 +22,7 @@ import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -38,15 +39,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.alexis.composelogin.R
+import com.alexis.composelogin.domain.Login
+import com.alexis.composelogin.ui.viewmodel.LoginViewModel
 
 @Composable
-fun BodyScreen(modifier: Modifier) {
-    val borderColorTexFieldDefault = 0xFFCCCCCC
-    var email by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
-    var borderColorEmail by rememberSaveable { mutableStateOf(borderColorTexFieldDefault) }
-    var borderColorPassword by rememberSaveable { mutableStateOf(borderColorTexFieldDefault) }
-
+fun BodyScreen(modifier: Modifier, loginViewModel: LoginViewModel) {
+    val login: Login by loginViewModel.login.observeAsState(initial = Login())
     Column(modifier = modifier) {
         Image(
             painter = painterResource(id = R.drawable.logo_instagram),
@@ -57,20 +55,34 @@ fun BodyScreen(modifier: Modifier) {
         )
         ShowSpacer(size = 100)
         TextFieldEmail(
-            email = email,
-            borderColor = borderColorEmail,
-            onTextChanged = { email = it },
-            onBorderColorChanged = { borderColorEmail = it })
+            email = login.email,
+            borderColor = login.borderColorEmail,
+            onTextChanged = {
+                loginViewModel.login(
+                    login.copy(email = it)
+                )
+            },
+            onBorderColorChanged = {
+                loginViewModel.login(
+                    login.copy(borderColorEmail = it)
+                )
+            })
         ShowSpacer(size = 10)
         TextFieldPassword(
-            password = password,
-            borderColor = borderColorPassword,
-            onTextChanged = { password = it }
+            password = login.password,
+            borderColor = login.borderColorPassword,
+            onTextChanged = {
+                loginViewModel.login(
+                    login.copy(password = it)
+                )
+            }
         ) {
-            borderColorPassword = it
+            loginViewModel.login(
+                login.copy(borderColorPassword = it)
+            )
         }
         ShowSpacer(size = 12)
-        ButtonLogin(enabled = true)
+        ButtonLogin(login.enableBottom)
         ShowSpacer(size = 14)
         ForgotPassword(Modifier.align(Alignment.CenterHorizontally))
     }
@@ -79,9 +91,9 @@ fun BodyScreen(modifier: Modifier) {
 @Composable
 fun TextFieldEmail(
     email: String,
-    borderColor: Long,
+    borderColor: Color,
     onTextChanged: (String) -> Unit,
-    onBorderColorChanged: (Long) -> Unit
+    onBorderColorChanged: (Color) -> Unit
 ) {
     var visibilityIcon by rememberSaveable { mutableStateOf(false) }
     TextFieldLogin(
@@ -103,9 +115,9 @@ fun TextFieldEmail(
 @Composable
 fun TextFieldPassword(
     password: String,
-    borderColor: Long,
+    borderColor: Color,
     onTextChanged: (String) -> Unit,
-    onBorderColorChanged: (Long) -> Unit
+    onBorderColorChanged: (Color) -> Unit
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
     var visibilityIcon by rememberSaveable { mutableStateOf(false) }
@@ -154,11 +166,11 @@ fun ForgotPassword(modifier: Modifier) {
 fun TextFieldLogin(
     text: String,
     label: String,
-    borderColor: Long,
+    borderColor: Color,
     keyboardType: KeyboardType,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     onTextChanged: (String) -> Unit,
-    onBorderColorChanged: (Long) -> Unit,
+    onBorderColorChanged: (Color) -> Unit,
     trailingIcon: @Composable (() -> Unit)? = null,
     onVisibilityIconChanged: (Boolean) -> Unit
 ) {
@@ -171,12 +183,12 @@ fun TextFieldLogin(
                 val isFocused = it.isFocused
                 onVisibilityIconChanged(isFocused)
                 if (isFocused) {
-                    onBorderColorChanged(0xFF444444)
+                    onBorderColorChanged(Color(0xFF444444))
                 } else {
-                    onBorderColorChanged(0xFFCCCCCC)
+                    onBorderColorChanged(Color(0xFFCCCCCC))
                 }
             }
-            .border(1.dp, Color(borderColor), RoundedCornerShape(15.dp)),
+            .border(1.dp, borderColor, RoundedCornerShape(15.dp)),
         label = {
             Text(
                 text = label,
