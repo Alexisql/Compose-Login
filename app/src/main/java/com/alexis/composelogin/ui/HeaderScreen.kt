@@ -1,4 +1,4 @@
-package com.alexis.composelogin.ui.login
+package com.alexis.composelogin.ui
 
 import android.app.Activity
 import androidx.compose.foundation.clickable

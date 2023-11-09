@@ -1,4 +1,4 @@
-package com.alexis.composelogin.ui.login
+package com.alexis.composelogin.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
